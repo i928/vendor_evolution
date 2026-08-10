@@ -204,9 +204,9 @@ ifneq ($(KERNEL_NO_GCC), true)
 
     ifeq ($(KERNEL_ARCH),arm64)
         # Add 32-bit GCC to PATH so that arm-linux-androidkernel-as is available for CONFIG_COMPAT_VDSO
-        TOOLS_PATH_OVERRIDE += PATH=$(BUILD_TOP)/prebuilts/tools-lineage/$(HOST_PREBUILT_TAG)/bin:$(KERNEL_TOOLCHAIN_arm):$$PATH
+        TOOLS_PATH_OVERRIDE += PATH=$(BUILD_TOP)/prebuilts/tools-lineage/$(HOST_PREBUILT_TAG)/bin:$(TARGET_KERNEL_CLANG_PATH)/bin:$(KERNEL_TOOLCHAIN_arm):$$PATH
     else
-        TOOLS_PATH_OVERRIDE += PATH=$(BUILD_TOP)/prebuilts/tools-lineage/$(HOST_PREBUILT_TAG)/bin:$$PATH
+        TOOLS_PATH_OVERRIDE += PATH=$(BUILD_TOP)/prebuilts/tools-lineage/$(HOST_PREBUILT_TAG)/bin:$(TARGET_KERNEL_CLANG_PATH)/bin:$$PATH
     endif
 
     # Set the full path to the clang command and LLVM binutils
@@ -254,6 +254,15 @@ KERNEL_MAKE_CMD := $(BUILD_TOP)/prebuilts/build-tools/$(HOST_PREBUILT_TAG)/bin/m
 ifneq ($(TARGET_KERNEL_CLANG_COMPILE), false)
     ifneq ($(TARGET_KERNEL_LLVM_BINUTILS), false)
         KERNEL_MAKE_FLAGS += LLVM=1 LLVM_IAS=1
+    endif
+    # Older kernels (e.g. msm-4.14) reject the Android clang --target unless
+    # CLANG_TRIPLE points at a non-Android GNU triple.
+    ifeq ($(KERNEL_ARCH),arm64)
+        KERNEL_MAKE_FLAGS += CLANG_TRIPLE=aarch64-linux-gnu-
+    else ifeq ($(KERNEL_ARCH),arm)
+        KERNEL_MAKE_FLAGS += CLANG_TRIPLE=arm-linux-gnueabi-
+    else ifeq ($(KERNEL_ARCH),x86)
+        KERNEL_MAKE_FLAGS += CLANG_TRIPLE=x86_64-linux-gnu-
     endif
 endif
 
