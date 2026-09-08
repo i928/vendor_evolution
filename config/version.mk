@@ -18,7 +18,10 @@ EVO_VERSION := $(EVO_VERSION_BASE)-Vanilla
 endif
 
 # Internal version
-LINEAGE_VERSION := EvolutionX-$(PRODUCT_VERSION_MAJOR).$(PRODUCT_VERSION_MINOR)-$(shell date +%Y%m%d)-$(LINEAGE_BUILD)-$(EVO_VERSION)-$(EVO_BUILD_TYPE)
+# Timestamp is %Y%m%d-%H%M, not just %Y%m%d: two builds on the same day would
+# otherwise produce the same zip name and the second would silently replace
+# the first, losing the earlier artifact (and its .sha256sum/.json).
+LINEAGE_VERSION := EvolutionX-$(PRODUCT_VERSION_MAJOR).$(PRODUCT_VERSION_MINOR)-$(shell date +%Y%m%d-%H%M)-$(LINEAGE_BUILD)-$(EVO_VERSION)-$(EVO_BUILD_TYPE)
 
 # Display version
 LINEAGE_DISPLAY_VERSION := v$(EVO_VERSION)-$(shell date +%Y%m%d)
