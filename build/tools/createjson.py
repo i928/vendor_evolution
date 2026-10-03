@@ -48,8 +48,11 @@ def generate_json(target_device, product_out, file_name, build_variant, with_gms
     if "Official" in file_name:
         download = f"https://cdn.evolution-x.org/{target_device}/{android_version}/{file_name}/download"
     else:
-        download = f"https://sourceforge.net/projects/your_unoffical_sourceforge_project/files/{target_device}/{android_version}/{file_name}/download"
-    version = file_name.split('-')[4]
+        # i928 unofficial builds: SourceForge project androidos, <device>/android<version>/.
+        download = f"https://sourceforge.net/projects/androidos/files/{target_device}/android{android_version}/{file_name}/download"
+    # EvolutionX-<ver>-<date>-<time>-<device>-<evo version>-<type>.zip: count from
+    # the end, since the build time (-%H%M) shifted the fields after the date.
+    version = file_name.split('-')[-2]
     buildprop = os.path.join(product_out, "system", "build.prop")
     timestamp = get_timestamp_from_buildprop(buildprop)
     md5 = get_checksum(os.path.join(product_out, file_name), 'md5')
