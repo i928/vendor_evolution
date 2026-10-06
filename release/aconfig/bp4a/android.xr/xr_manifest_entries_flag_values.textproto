@@ -1,0 +1,10 @@
+# READ_WRITE (still DISABLED) so the android.xr package is written to the
+# on-device flag storage: the build keeps only ENABLED or READ_WRITE flags,
+# and with android.xr absent every app using the exported XR flags logged
+# "AconfigStorageReadException: ERROR_PACKAGE_NOT_FOUND: package android.xr".
+flag_value {
+  package: "android.xr"
+  name: "xr_manifest_entries"
+  state: DISABLED
+  permission: READ_WRITE
+}
