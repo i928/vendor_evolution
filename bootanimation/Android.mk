@@ -19,7 +19,9 @@ TARGET_BOOTANIMATION_LOGO_SCALE ?= 80
 
 TARGET_GENERATED_BOOTANIMATION := $(TARGET_OUT_INTERMEDIATES)/BOOTANIMATION/bootanimation.zip
 $(TARGET_GENERATED_BOOTANIMATION): INTERMEDIATES := $(call intermediates-dir-for,BOOTANIMATION,bootanimation)
-$(TARGET_GENERATED_BOOTANIMATION): $(SOONG_ZIP)
+$(TARGET_GENERATED_BOOTANIMATION): $(SOONG_ZIP) \
+        vendor/lineage/bootanimation/bootanimation.tar \
+        vendor/lineage/bootanimation/desc.txt
 	@echo "Building bootanimation.zip"
 	@rm -rf $(dir $@)
 	@mkdir -p $(INTERMEDIATES)
